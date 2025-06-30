@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contas a Pagar</title>
+    <link rel="icon" href="icone.png" type="image/png">
+    <style>
+        /* CSS INCLUÍDO AQUI */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #a8e063, #56ab2f); /* Gradiente verde */
+            min-height: 100vh;
+            color: #333;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-image {
+            max-width: 150px; /* Ajuste o tamanho do banner conforme necessário */
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #2e7d32; /* Um tom de verde mais escuro para o título */
+            margin: 0;
+        }
+
+        main {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #4CAF50; /* Verde vibrante para os rótulos */
+        }
+
+        .input-group input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .input-group input[type="number"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        .input-group input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2); /* Aumenta o tamanho do checkbox */
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            font-weight: normal;
+            color: #333;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        /* Cores dos botões respeitando a teoria das cores (complementares/análogas ao verde) */
+        .primary-btn {
+            background-color: #4CAF50; /* Verde primário */
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background-color: #388E3C; /* Verde mais escuro no hover */
+        }
+
+        .secondary-btn {
+            background-color: #FFC107; /* Amarelo (análogo ou complementar suave ao verde) */
+            color: #333;
+        }
+
+        .secondary-btn:hover {
+            background-color: #FFA000; /* Laranja mais escuro no hover */
+        }
+
+        .result-area {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f5e9; /* Fundo mais claro para a área de resultado */
+            border: 1px solid #c8e6c9;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-area h2 {
+            margin: 0;
+            color: #2e7d32;
+            font-size: 1.8em;
+        }
+
+        #totalGastos {
+            font-weight: bold;
+            color: #1b5e20; /* Verde bem escuro para o total */
+        }
+
+        /* Responsividade básica */
+        @media (max-width: 600px) {
+            main {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 10px 15px;
+                font-size: 1em;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="banner.png" alt="Banner Planilha" class="banner-image">
+        <h1>Contas a Pagar</h1>
+    </header>
+
+    <main>
+        <div class="input-group">
+            <label for="aluguel">Aluguel:</label>
+            <input type="number" id="aluguel" value="400" min="0">
+        </div>
+
+        <div class="input-group">
+            <label for="cartaoItau">Cartão Itaú:</label>
+            <input type="number" id="cartaoItau" value="100" min="0">
+        </div>
+
+        <div class="input-group">
+            <label for="internet">Internet:</label>
+            <input type="number" id="internet" value="100" min="0">
+        </div>
+
+        <div class="input-group">
+            <label for="agua">Água:</label>
+            <input type="number" id="agua" value="0" min="0">
+        </div>
+
+        <div class="input-group">
+            <label for="luz">Luz:</label>
+            <input type="number" id="luz" value="0" min="0">
+        </div>
+
+        <div class="input-group">
+            <label for="gas">Gás:</label>
+            <input type="number" id="gas" value="120" min="0" disabled>
+            <input type="checkbox" id="ativarGas">
+            <label for="ativarGas" class="checkbox-label">Ativar Gás</label>
+        </div>
+
+        <div class="input-group">
+            <label for="cartaoCredito">Cartão de Crédito:</label>
+            <input type="number" id="cartaoCredito" value="0" min="0">
+        </div>
+
+        <div class="buttons">
+            <button id="calcular" class="btn primary-btn">Calcular Gastos</button>
+            <button id="limpar" class="btn secondary-btn">Limpar Campos</button>
+        </div>
+
+        <div class="result-area">
+            <h2>Total de Gastos: <span id="totalGastos">R$ 0,00</span></h2>
+        </div>
+    </main>
+
+    <script>
+        // JAVASCRIPT INCLUÍDO AQUI
+        document.addEventListener('DOMContentLoaded', () => {
+            const aluguelInput = document.getElementById('aluguel');
+            const cartaoItauInput = document.getElementById('cartaoItau');
+            const internetInput = document.getElementById('internet');
+            const aguaInput = document.getElementById('agua');
+            const luzInput = document.getElementById('luz');
+            const gasInput = document.getElementById('gas');
+            const ativarGasCheckbox = document.getElementById('ativarGas');
+            const cartaoCreditoInput = document.getElementById('cartaoCredito');
+            const calcularBtn = document.getElementById('calcular');
+            const limparBtn = document.getElementById('limpar');
+            const totalGastosSpan = document.getElementById('totalGastos');
+
+            // Função para calcular o total
+            function calcularTotal() {
+                let total = 0;
+
+                // Soma os valores dos campos
+                // Certifica-se de que os valores são números e trata campos vazios como 0
+                total += parseFloat(aluguelInput.value) || 0;
+                total += parseFloat(cartaoItauInput.value) || 0;
+                total += parseFloat(internetInput.value) || 0;
+                total += parseFloat(aguaInput.value) || 0;
+                total += parseFloat(luzInput.value) || 0;
+                total += parseFloat(cartaoCreditoInput.value) || 0;
+
+                // Adiciona o valor do gás somente se o checkbox estiver marcado e o campo não estiver desabilitado
+                if (ativarGasCheckbox.checked && !gasInput.disabled) {
+                    total += parseFloat(gasInput.value) || 0;
+                }
+
+                // Atualiza o display do total formatando para moeda brasileira
+                totalGastosSpan.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            }
+
+            // Função para limpar os campos e resetar o total
+            function limparCampos() {
+                aluguelInput.value = '400';
+                cartaoItauInput.value = '100';
+                internetInput.value = '100';
+                aguaInput.value = '0';
+                luzInput.value = '0';
+                gasInput.value = '120';
+                ativarGasCheckbox.checked = false; // Desmarca o checkbox
+                gasInput.disabled = true; // Desabilita o campo de gás
+                cartaoCreditoInput.value = '0';
+                totalGastosSpan.textContent = 'R$ 0,00';
+            }
+
+            // Event Listener para o checkbox de Gás
+            ativarGasCheckbox.addEventListener('change', () => {
+                if (ativarGasCheckbox.checked) {
+                    gasInput.disabled = false; // Habilita o campo
+                } else {
+                    gasInput.disabled = true; // Desabilita o campo
+                    gasInput.value = '120'; // Opcional: reseta o valor para o padrão ao desabilitar
+                }
+                calcularTotal(); // Recalcula o total quando o status do gás muda
+            });
+
+            // Event Listeners para os botões
+            calcularBtn.addEventListener('click', calcularTotal);
+            limparBtn.addEventListener('click', limparCampos);
+
+            // Event Listeners para recalcular o total ao digitar nos campos
+            // Usamos 'input' para capturar mudanças em tempo real
+            aluguelInput.addEventListener('input', calcularTotal);
+            cartaoItauInput.addEventListener('input', calcularTotal);
+            internetInput.addEventListener('input', calcularTotal);
+            aguaInput.addEventListener('input', calcularTotal);
+            luzInput.addEventListener('input', calcularTotal);
+            gasInput.addEventListener('input', calcularTotal);
+            cartaoCreditoInput.addEventListener('input', calcularTotal);
+
+            // Inicializa o cálculo ao carregar a página para mostrar os valores padrão
+            calcularTotal();
+        });
+    </script>
+</body>
+</html>

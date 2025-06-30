@@ -1,0 +1,160 @@
+body {
+    font-family Arial, sans-serif;
+    margin 0;
+    padding 0;
+    display flex;
+    flex-direction column;
+    align-items center;
+    background linear-gradient(135deg, #a8e063, #56ab2f);  Gradiente verde 
+    min-height 100vh;
+    color #333;
+}
+
+header {
+    width 100%;
+    text-align center;
+    padding 20px 0;
+    background-color rgba(255, 255, 255, 0.8);
+    box-shadow 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom 20px;
+    display flex;
+    flex-direction column;
+    align-items center;
+    justify-content center;
+}
+
+.banner-image {
+    max-width 150px;  Ajuste o tamanho do banner conforme necessário 
+    height auto;
+    margin-bottom 10px;
+}
+
+h1 {
+    color #2e7d32;  Um tom de verde mais escuro para o título 
+    margin 0;
+}
+
+main {
+    background-color rgba(255, 255, 255, 0.9);
+    padding 30px;
+    border-radius 10px;
+    box-shadow 0 4px 10px rgba(0, 0, 0, 0.2);
+    width 90%;
+    max-width 500px;
+    box-sizing border-box;
+}
+
+.input-group {
+    margin-bottom 15px;
+    display flex;
+    flex-direction column;
+}
+
+.input-group label {
+    margin-bottom 5px;
+    font-weight bold;
+    color #4CAF50;  Verde vibrante para os rótulos 
+}
+
+.input-group input[type=number] {
+    padding 10px;
+    border 1px solid #ccc;
+    border-radius 5px;
+    font-size 1em;
+}
+
+.input-group input[type=number]focus {
+    outline none;
+    border-color #4CAF50;
+    box-shadow 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.input-group input[type=checkbox] {
+    margin-right 8px;
+    transform scale(1.2);  Aumenta o tamanho do checkbox 
+}
+
+.checkbox-label {
+    display flex;
+    align-items center;
+    margin-top 5px;
+    font-weight normal;
+    color #333;
+}
+
+.buttons {
+    display flex;
+    justify-content space-around;
+    margin-top 25px;
+}
+
+.btn {
+    padding 12px 25px;
+    border none;
+    border-radius 5px;
+    font-size 1.1em;
+    cursor pointer;
+    transition background-color 0.3s ease;
+    flex 1;
+    margin 0 5px;
+}
+
+ Cores dos botões respeitando a teoria das cores (complementaresanálogas ao verde) 
+.primary-btn {
+    background-color #4CAF50;  Verde primário 
+    color white;
+}
+
+.primary-btnhover {
+    background-color #388E3C;  Verde mais escuro no hover 
+}
+
+.secondary-btn {
+    background-color #FFC107;  Amarelo (análogo ou complementar suave ao verde) 
+    color #333;
+}
+
+.secondary-btnhover {
+    background-color #FFA000;  Laranja mais escuro no hover 
+}
+
+.result-area {
+    margin-top 30px;
+    padding 20px;
+    background-color #e8f5e9;  Fundo mais claro para a área de resultado 
+    border 1px solid #c8e6c9;
+    border-radius 8px;
+    text-align center;
+}
+
+.result-area h2 {
+    margin 0;
+    color #2e7d32;
+    font-size 1.8em;
+}
+
+#totalGastos {
+    font-weight bold;
+    color #1b5e20;  Verde bem escuro para o total 
+}
+
+ Responsividade básica 
+@media (max-width 600px) {
+    main {
+        width 95%;
+        padding 20px;
+    }
+
+    .btn {
+        padding 10px 15px;
+        font-size 1em;
+    }
+
+    .buttons {
+        flex-direction column;
+    }
+
+    .btn {
+        margin 5px 0;
+    }
+}
