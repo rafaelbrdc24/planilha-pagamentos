@@ -387,6 +387,54 @@
             background: #feb2b2;
         }
 
+        .cartao-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+            background: #f7fafc;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .cartao-item input[type="text"] {
+            flex: 2;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .cartao-item input[type="number"] {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .cartao-item input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+
+        .remover-cartao {
+            background: #fed7d7;
+            color: #c53030;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+        }
+
+        .remover-cartao:hover {
+            background: #feb2b2;
+        }
+
         .notification {
             position: fixed;
             top: 20px;
@@ -543,9 +591,9 @@
                     </div>
 
                     <div class="input-group">
-                        <label for="cartaoItau">Cartão Itaú</label>
+                        <label for="cartaoCredito">Cartão de Crédito</label>
                         <div class="input-wrapper">
-                            <input type="number" id="cartaoItau" value="100" min="0" step="0.01">
+                            <input type="number" id="cartaoCredito" value="0" min="0" step="0.01">
                             <i class="fas fa-credit-card"></i>
                         </div>
                     </div>
@@ -586,12 +634,15 @@
                         </div>
                     </div>
 
-                    <div class="input-group">
-                        <label for="cartaoCredito">Cartão de Crédito</label>
-                        <div class="input-wrapper">
-                            <input type="number" id="cartaoCredito" value="0" min="0" step="0.01">
-                            <i class="fas fa-credit-card"></i>
+                    <div class="input-group full-width">
+                        <label>Cartões de Crédito</label>
+                        <div id="cartoesContainer">
+                            <!-- Cartões serão adicionados dinamicamente aqui -->
                         </div>
+                        <button type="button" id="adicionarCartao" class="btn secondary-btn" style="margin-top: 10px; width: 100%;">
+                            <i class="fas fa-plus"></i>
+                            Adicionar Cartão
+                        </button>
                     </div>
 
                     <div class="input-group">
@@ -721,18 +772,21 @@
             // Elementos do DOM
             const inputs = {
                 aluguel: document.getElementById('aluguel'),
-                cartaoItau: document.getElementById('cartaoItau'),
                 internet: document.getElementById('internet'),
                 agua: document.getElementById('agua'),
                 luz: document.getElementById('luz'),
                 gas: document.getElementById('gas'),
-                cartaoCredito: document.getElementById('cartaoCredito'),
                 supermercado: document.getElementById('supermercado'),
                 transporte: document.getElementById('transporte'),
                 saude: document.getElementById('saude'),
                 lazer: document.getElementById('lazer'),
                 outros: document.getElementById('outros')
             };
+
+            // Sistema de cartões dinâmicos
+            const cartoesContainer = document.getElementById('cartoesContainer');
+            const adicionarCartaoBtn = document.getElementById('adicionarCartao');
+            let cartoes = [];
 
             const salarioBaseInput = document.getElementById('salarioBase');
             const rendaExtraInput = document.getElementById('rendaExtra');
@@ -756,6 +810,65 @@
 
             // Histórico de cálculos
             let history = JSON.parse(localStorage.getItem('expenseHistory') || '[]');
+
+            // Função para adicionar cartão
+            function adicionarCartao() {
+                const cartaoId = Date.now();
+                const cartao = {
+                    id: cartaoId,
+                    nome: '',
+                    valor: 0
+                };
+                
+                cartoes.push(cartao);
+                renderizarCartoes();
+                calcularTotal();
+            }
+
+            // Função para remover cartão
+            function removerCartao(cartaoId) {
+                cartoes = cartoes.filter(c => c.id !== cartaoId);
+                renderizarCartoes();
+                calcularTotal();
+            }
+
+            // Função para renderizar cartões
+            function renderizarCartoes() {
+                cartoesContainer.innerHTML = '';
+                
+                cartoes.forEach(cartao => {
+                    const cartaoElement = document.createElement('div');
+                    cartaoElement.className = 'cartao-item';
+                    cartaoElement.innerHTML = `
+                        <input type="text" 
+                               placeholder="Nome do cartão (ex: Nubank, Itaú)" 
+                               value="${cartao.nome}"
+                               onchange="atualizarCartao(${cartao.id}, 'nome', this.value)">
+                        <input type="number" 
+                               placeholder="Valor" 
+                               value="${cartao.valor}" 
+                               min="0" 
+                               step="0.01"
+                               onchange="atualizarCartao(${cartao.id}, 'valor', this.value)">
+                        <button type="button" 
+                                class="remover-cartao" 
+                                onclick="removerCartao(${cartao.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    
+                    cartoesContainer.appendChild(cartaoElement);
+                });
+            }
+
+            // Função para atualizar cartão
+            function atualizarCartao(cartaoId, campo, valor) {
+                const cartao = cartoes.find(c => c.id === cartaoId);
+                if (cartao) {
+                    cartao[campo] = campo === 'valor' ? parseFloat(valor) || 0 : valor;
+                    calcularTotal();
+                }
+            }
 
             // Função para formatar moeda
             function formatCurrency(value) {
@@ -791,7 +904,7 @@
                 let total = 0;
                 const values = {};
 
-                // Soma todos os valores
+                // Soma todos os valores dos campos fixos
                 Object.keys(inputs).forEach(key => {
                     const value = parseFloat(inputs[key].value) || 0;
                     values[key] = value;
@@ -802,6 +915,15 @@
                     
                     total += value;
                 });
+
+                // Soma valores dos cartões de crédito
+                let totalCartoes = 0;
+                cartoes.forEach(cartao => {
+                    totalCartoes += cartao.valor || 0;
+                });
+                
+                values.cartoes = totalCartoes;
+                total += totalCartoes;
 
                 // Calcula renda total
                 const rendaTotal = calcularRendaTotal();
@@ -825,7 +947,7 @@
                 // Calcula estatísticas
                 calcularEstatisticas(values, total, rendaTotal);
                 
-                return { total, values, rendaTotal, saldoDisponivel };
+                return { total, values, rendaTotal, saldoDisponivel, cartoes };
             }
 
             // Função para calcular estatísticas
@@ -869,12 +991,10 @@
             function limparCampos() {
                 const defaultValues = {
                     aluguel: '400',
-                    cartaoItau: '100',
                     internet: '100',
                     agua: '0',
                     luz: '0',
                     gas: '120',
-                    cartaoCredito: '0',
                     supermercado: '0',
                     transporte: '0',
                     saude: '0',
@@ -885,6 +1005,10 @@
                 Object.keys(inputs).forEach(key => {
                     inputs[key].value = defaultValues[key];
                 });
+
+                // Limpa cartões
+                cartoes = [];
+                renderizarCartoes();
 
                 // Limpa campos de renda
                 salarioBaseInput.value = '0';
@@ -899,7 +1023,7 @@
 
             // Função para salvar cálculo
             function salvarCalculo() {
-                const { total, values, rendaTotal, saldoDisponivel } = calcularTotal();
+                const { total, values, rendaTotal, saldoDisponivel, cartoes } = calcularTotal();
                 const data = new Date().toLocaleString('pt-BR');
                 
                 const calculo = {
@@ -908,7 +1032,8 @@
                     total,
                     values,
                     rendaTotal,
-                    saldoDisponivel
+                    saldoDisponivel,
+                    cartoes
                 };
                 
                 history.unshift(calculo);
@@ -953,6 +1078,16 @@
                     }
                 });
                 
+                // Carrega cartões se existirem
+                if (item.cartoes && Array.isArray(item.cartoes)) {
+                    cartoes = [...item.cartoes];
+                    renderizarCartoes();
+                } else {
+                    // Para compatibilidade com histórico antigo
+                    cartoes = [];
+                    renderizarCartoes();
+                }
+                
                 // Carrega dados de renda se existirem
                 if (item.rendaTotal !== undefined) {
                     // Para compatibilidade com histórico antigo
@@ -981,7 +1116,7 @@
 
             // Função para exportar PDF
             function exportarPDF() {
-                const { total, values, rendaTotal, saldoDisponivel } = calcularTotal();
+                const { total, values, rendaTotal, saldoDisponivel, cartoes } = calcularTotal();
                 const data = new Date().toLocaleString('pt-BR');
                 
                 let content = `
@@ -999,12 +1134,24 @@
                     <ul>
                 `;
                 
+                // Adiciona despesas fixas
                 Object.keys(values).forEach(key => {
-                    if (values[key] > 0) {
+                    if (values[key] > 0 && key !== 'cartoes') {
                         const label = key.charAt(0).toUpperCase() + key.slice(1);
                         content += `<li>${label}: ${formatCurrency(values[key])}</li>`;
                     }
                 });
+                
+                // Adiciona cartões de crédito
+                if (cartoes.length > 0) {
+                    content += `<li><strong>Cartões de Crédito:</strong></li>`;
+                    cartoes.forEach(cartao => {
+                        if (cartao.valor > 0) {
+                            const nome = cartao.nome || 'Cartão sem nome';
+                            content += `<li>&nbsp;&nbsp;• ${nome}: ${formatCurrency(cartao.valor)}</li>`;
+                        }
+                    });
+                }
                 
                 content += `
                     </ul>
@@ -1102,9 +1249,13 @@ Percentual: ${((total / rendaTotal) * 100).toFixed(1)}% da renda`;
             salarioBaseInput.addEventListener('input', calcularTotal);
             rendaExtraInput.addEventListener('input', calcularTotal);
 
+            // Event Listener para adicionar cartão
+            adicionarCartaoBtn.addEventListener('click', adicionarCartao);
+
             // Inicialização
             calcularTotal();
             atualizarHistorico();
+            renderizarCartoes();
         });
     </script>
 </body>
