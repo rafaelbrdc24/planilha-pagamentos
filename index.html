@@ -768,6 +768,30 @@
     <div id="notification" class="notification"></div>
 
     <script>
+        // Variáveis globais para cartões
+        let cartoes = [];
+        let cartoesContainer, adicionarCartaoBtn;
+
+        // Função global para atualizar cartão
+        function atualizarCartao(cartaoId, campo, valor) {
+            console.log('Atualizando cartão:', cartaoId, campo, valor);
+            const cartao = cartoes.find(c => c.id === cartaoId);
+            if (cartao) {
+                cartao[campo] = campo === 'valor' ? parseFloat(valor) || 0 : valor;
+                console.log('Cartão atualizado:', cartao);
+                calcularTotal();
+            }
+        }
+
+        // Função global para remover cartão
+        function removerCartao(cartaoId) {
+            console.log('Removendo cartão:', cartaoId);
+            cartoes = cartoes.filter(c => c.id !== cartaoId);
+            console.log('Cartões restantes:', cartoes);
+            renderizarCartoes();
+            calcularTotal();
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // Elementos do DOM
             const inputs = {
@@ -784,9 +808,8 @@
             };
 
             // Sistema de cartões dinâmicos
-            const cartoesContainer = document.getElementById('cartoesContainer');
-            const adicionarCartaoBtn = document.getElementById('adicionarCartao');
-            let cartoes = [];
+            cartoesContainer = document.getElementById('cartoesContainer');
+            adicionarCartaoBtn = document.getElementById('adicionarCartao');
 
             const salarioBaseInput = document.getElementById('salarioBase');
             const rendaExtraInput = document.getElementById('rendaExtra');
@@ -813,6 +836,7 @@
 
             // Função para adicionar cartão
             function adicionarCartao() {
+                console.log('Adicionando novo cartão');
                 const cartaoId = Date.now();
                 const cartao = {
                     id: cartaoId,
@@ -821,13 +845,7 @@
                 };
                 
                 cartoes.push(cartao);
-                renderizarCartoes();
-                calcularTotal();
-            }
-
-            // Função para remover cartão
-            function removerCartao(cartaoId) {
-                cartoes = cartoes.filter(c => c.id !== cartaoId);
+                console.log('Cartões após adicionar:', cartoes);
                 renderizarCartoes();
                 calcularTotal();
             }
@@ -843,13 +861,13 @@
                         <input type="text" 
                                placeholder="Nome do cartão (ex: Nubank, Itaú)" 
                                value="${cartao.nome}"
-                               onchange="atualizarCartao(${cartao.id}, 'nome', this.value)">
+                               oninput="atualizarCartao(${cartao.id}, 'nome', this.value)">
                         <input type="number" 
                                placeholder="Valor" 
                                value="${cartao.valor}" 
                                min="0" 
                                step="0.01"
-                               onchange="atualizarCartao(${cartao.id}, 'valor', this.value)">
+                               oninput="atualizarCartao(${cartao.id}, 'valor', this.value)">
                         <button type="button" 
                                 class="remover-cartao" 
                                 onclick="removerCartao(${cartao.id})">
@@ -859,15 +877,6 @@
                     
                     cartoesContainer.appendChild(cartaoElement);
                 });
-            }
-
-            // Função para atualizar cartão
-            function atualizarCartao(cartaoId, campo, valor) {
-                const cartao = cartoes.find(c => c.id === cartaoId);
-                if (cartao) {
-                    cartao[campo] = campo === 'valor' ? parseFloat(valor) || 0 : valor;
-                    calcularTotal();
-                }
             }
 
             // Função para formatar moeda
@@ -901,6 +910,7 @@
 
             // Função para calcular o total
             function calcularTotal() {
+                console.log('Função calcularTotal chamada');
                 let total = 0;
                 const values = {};
 
@@ -924,6 +934,11 @@
                 
                 values.cartoes = totalCartoes;
                 total += totalCartoes;
+                
+                // Debug: mostra no console os valores dos cartões
+                console.log('Cartões:', cartoes);
+                console.log('Total cartões:', totalCartoes);
+                console.log('Total geral:', total);
 
                 // Calcula renda total
                 const rendaTotal = calcularRendaTotal();
