@@ -3,304 +3,1108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contas a Pagar</title>
+    <title>Contas a Pagar - Gerenciador Financeiro</title>
     <link rel="icon" href="icone.png" type="image/png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* CSS INCLUÍDO AQUI */
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: linear-gradient(135deg, #a8e063, #56ab2f); /* Gradiente verde */
-            min-height: 100vh;
-            color: #333;
-        }
-
-        header {
-            width: 100%;
-            text-align: center;
-            padding: 20px 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .banner-image {
-            max-width: 150px; /* Ajuste o tamanho do banner conforme necessário */
-            height: auto;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            color: #2e7d32; /* Um tom de verde mais escuro para o título */
-            margin: 0;
-        }
-
-        main {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 500px;
             box-sizing: border-box;
         }
 
-        .input-group {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .banner-image {
+            max-width: 200px;
+            height: auto;
             margin-bottom: 15px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .banner-image:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-section, .summary-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .form-section {
+            animation-delay: 0.1s;
+        }
+
+        .summary-section {
+            animation-delay: 0.2s;
+        }
+
+        .section-title {
+            color: #4a5568;
+            font-size: 1.5em;
+            margin-bottom: 25px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #667eea;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group.full-width {
+            grid-column: 1 / -1;
         }
 
         .input-group label {
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #4CAF50; /* Verde vibrante para os rótulos */
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.95em;
         }
 
-        .input-group input[type="number"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            transition: color 0.3s ease;
+        }
+
+        .input-group input[type="number"],
+        .input-group input[type="text"] {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
             font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
         }
 
-        .input-group input[type="number"]:focus {
+        .input-group input[type="number"]:focus,
+        .input-group input[type="text"]:focus {
             outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        .input-group input[type="checkbox"] {
-            margin-right: 8px;
-            transform: scale(1.2); /* Aumenta o tamanho do checkbox */
+        .input-group input[type="number"]:focus + i,
+        .input-group input[type="text"]:focus + i {
+            color: #667eea;
         }
 
-        .checkbox-label {
+        .input-group input:disabled {
+            background-color: #f7fafc;
+            color: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .checkbox-group {
             display: flex;
             align-items: center;
-            margin-top: 5px;
-            font-weight: normal;
-            color: #333;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
         }
 
         .buttons {
             display: flex;
-            justify-content: space-around;
-            margin-top: 25px;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            flex: 1;
-            margin: 0 5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            justify-content: center;
         }
 
-        /* Cores dos botões respeitando a teoria das cores (complementares/análogas ao verde) */
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
         .primary-btn {
-            background-color: #4CAF50; /* Verde primário */
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
         }
 
         .primary-btn:hover {
-            background-color: #388E3C; /* Verde mais escuro no hover */
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
         }
 
         .secondary-btn {
-            background-color: #FFC107; /* Amarelo (análogo ou complementar suave ao verde) */
-            color: #333;
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
         }
 
         .secondary-btn:hover {
-            background-color: #FFA000; /* Laranja mais escuro no hover */
+            background: #edf2f7;
+            border-color: #cbd5e0;
         }
 
-        .result-area {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e8f5e9; /* Fundo mais claro para a área de resultado */
-            border: 1px solid #c8e6c9;
-            border-radius: 8px;
+        .success-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .success-btn:hover {
+            background: linear-gradient(135deg, #38a169, #2f855a);
+        }
+
+        .warning-btn {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+        }
+
+        .warning-btn:hover {
+            background: linear-gradient(135deg, #dd6b20, #c05621);
+        }
+
+        .total-display {
             text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
         }
 
-        .result-area h2 {
-            margin: 0;
-            color: #2e7d32;
-            font-size: 1.8em;
+        .total-display h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
         }
 
         #totalGastos {
+            font-size: 2.5em;
             font-weight: bold;
-            color: #1b5e20; /* Verde bem escuro para o total */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Responsividade básica */
-        @media (max-width: 600px) {
-            main {
-                width: 95%;
-                padding: 20px;
+        .income-summary {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            color: white;
+            text-align: center;
+        }
+
+        .income-total h3 {
+            margin: 0;
+            font-size: 1.3em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .balance-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        .balance-display h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        #saldoDisponivel {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-card h3 {
+            font-size: 0.9em;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .history-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: #edf2f7;
+            transform: translateX(5px);
+        }
+
+        .history-date {
+            font-size: 0.9em;
+            color: #718096;
+        }
+
+        .history-total {
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .clear-history-btn {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-history-btn:hover {
+            background: #feb2b2;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f56565, #e53e3e);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
 
-            .btn {
-                padding: 10px 15px;
-                font-size: 1em;
+            .input-grid {
+                grid-template-columns: 1fr;
             }
 
             .buttons {
                 flex-direction: column;
             }
 
-            .btn {
-                margin: 5px 0;
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <header>
-        <img src="banner.png" alt="Banner Planilha" class="banner-image">
-        <h1>Contas a Pagar</h1>
-    </header>
+    <div class="container">
+        <header>
+            <img src="banner.png" alt="Banner Planilha" class="banner-image">
+            <h1>Contas a Pagar</h1>
+            <p class="subtitle">Gerenciador Financeiro Pessoal</p>
+        </header>
 
-    <main>
-        <div class="input-group">
-            <label for="aluguel">Aluguel:</label>
-            <input type="number" id="aluguel" value="400" min="0">
+        <div class="main-content">
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-money-bill-wave"></i>
+                    Renda Mensal
+                </h2>
+                
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="salarioBase">Salário Base</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="salarioBase" value="0" min="0" step="0.01">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="rendaExtra">Renda Extra</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="rendaExtra" value="0" min="0" step="0.01">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="income-summary">
+                    <div class="income-total">
+                        <h3>Renda Total: <span id="rendaTotal">R$ 0,00</span></h3>
+                    </div>
+                </div>
+
+                <h2 class="section-title" style="margin-top: 30px;">
+                    <i class="fas fa-edit"></i>
+                    Despesas Mensais
+                </h2>
+                
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="aluguel">Aluguel</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="aluguel" value="400" min="0" step="0.01">
+                            <i class="fas fa-home"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cartaoItau">Cartão Itaú</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="cartaoItau" value="100" min="0" step="0.01">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="internet">Internet</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="internet" value="100" min="0" step="0.01">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="agua">Água</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="agua" value="0" min="0" step="0.01">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="luz">Luz</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="luz" value="0" min="0" step="0.01">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="gas">Gás</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="gas" value="120" min="0" step="0.01" disabled>
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="ativarGas">
+                            <label for="ativarGas">Ativar Gás</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cartaoCredito">Cartão de Crédito</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="cartaoCredito" value="0" min="0" step="0.01">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="supermercado">Supermercado</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="supermercado" value="0" min="0" step="0.01">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="transporte">Transporte</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="transporte" value="0" min="0" step="0.01">
+                            <i class="fas fa-bus"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="saude">Saúde</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="saude" value="0" min="0" step="0.01">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="lazer">Lazer</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="lazer" value="0" min="0" step="0.01">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label for="outros">Outros Gastos</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="outros" value="0" min="0" step="0.01">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button id="calcular" class="btn primary-btn">
+                        <i class="fas fa-calculator"></i>
+                        Calcular Total
+                    </button>
+                    <button id="limpar" class="btn secondary-btn">
+                        <i class="fas fa-eraser"></i>
+                        Limpar
+                    </button>
+                    <button id="salvar" class="btn success-btn">
+                        <i class="fas fa-save"></i>
+                        Salvar
+                    </button>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Resumo Financeiro
+                </h2>
+
+                <div class="total-display">
+                    <h2>Total de Gastos</h2>
+                    <div id="totalGastos" class="pulse">R$ 0,00</div>
+                </div>
+
+                <div class="balance-display">
+                    <h2>Saldo Disponível</h2>
+                    <div id="saldoDisponivel" class="pulse">R$ 0,00</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Maior Gasto</h3>
+                        <div class="value" id="maiorGasto">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Média por Categoria</h3>
+                        <div class="value" id="mediaCategoria">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>% da Renda</h3>
+                        <div class="value" id="percentualRenda">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Restante</h3>
+                        <div class="value" id="restante">-</div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button id="exportar" class="btn warning-btn">
+                        <i class="fas fa-download"></i>
+                        Exportar PDF
+                    </button>
+                    <button id="compartilhar" class="btn secondary-btn">
+                        <i class="fas fa-share-alt"></i>
+                        Compartilhar
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <div class="input-group">
-            <label for="cartaoItau">Cartão Itaú:</label>
-            <input type="number" id="cartaoItau" value="100" min="0">
+        <div class="history-section">
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                Histórico de Cálculos
+            </h2>
+            <div class="history-list" id="historyList">
+                <!-- Histórico será preenchido dinamicamente -->
+            </div>
+            <button id="clearHistory" class="clear-history-btn">
+                <i class="fas fa-trash"></i>
+                Limpar Histórico
+            </button>
         </div>
+    </div>
 
-        <div class="input-group">
-            <label for="internet">Internet:</label>
-            <input type="number" id="internet" value="100" min="0">
-        </div>
-
-        <div class="input-group">
-            <label for="agua">Água:</label>
-            <input type="number" id="agua" value="0" min="0">
-        </div>
-
-        <div class="input-group">
-            <label for="luz">Luz:</label>
-            <input type="number" id="luz" value="0" min="0">
-        </div>
-
-        <div class="input-group">
-            <label for="gas">Gás:</label>
-            <input type="number" id="gas" value="120" min="0" disabled>
-            <input type="checkbox" id="ativarGas">
-            <label for="ativarGas" class="checkbox-label">Ativar Gás</label>
-        </div>
-
-        <div class="input-group">
-            <label for="cartaoCredito">Cartão de Crédito:</label>
-            <input type="number" id="cartaoCredito" value="0" min="0">
-        </div>
-
-        <div class="buttons">
-            <button id="calcular" class="btn primary-btn">Calcular Gastos</button>
-            <button id="limpar" class="btn secondary-btn">Limpar Campos</button>
-        </div>
-
-        <div class="result-area">
-            <h2>Total de Gastos: <span id="totalGastos">R$ 0,00</span></h2>
-        </div>
-    </main>
+    <div id="notification" class="notification"></div>
 
     <script>
-        // JAVASCRIPT INCLUÍDO AQUI
         document.addEventListener('DOMContentLoaded', () => {
-            const aluguelInput = document.getElementById('aluguel');
-            const cartaoItauInput = document.getElementById('cartaoItau');
-            const internetInput = document.getElementById('internet');
-            const aguaInput = document.getElementById('agua');
-            const luzInput = document.getElementById('luz');
-            const gasInput = document.getElementById('gas');
+            // Elementos do DOM
+            const inputs = {
+                aluguel: document.getElementById('aluguel'),
+                cartaoItau: document.getElementById('cartaoItau'),
+                internet: document.getElementById('internet'),
+                agua: document.getElementById('agua'),
+                luz: document.getElementById('luz'),
+                gas: document.getElementById('gas'),
+                cartaoCredito: document.getElementById('cartaoCredito'),
+                supermercado: document.getElementById('supermercado'),
+                transporte: document.getElementById('transporte'),
+                saude: document.getElementById('saude'),
+                lazer: document.getElementById('lazer'),
+                outros: document.getElementById('outros')
+            };
+
+            const salarioBaseInput = document.getElementById('salarioBase');
+            const rendaExtraInput = document.getElementById('rendaExtra');
+            const rendaTotalSpan = document.getElementById('rendaTotal');
+            const saldoDisponivelSpan = document.getElementById('saldoDisponivel');
+            const percentualRendaSpan = document.getElementById('percentualRenda');
+            const restanteSpan = document.getElementById('restante');
+
             const ativarGasCheckbox = document.getElementById('ativarGas');
-            const cartaoCreditoInput = document.getElementById('cartaoCredito');
             const calcularBtn = document.getElementById('calcular');
             const limparBtn = document.getElementById('limpar');
+            const salvarBtn = document.getElementById('salvar');
+            const exportarBtn = document.getElementById('exportar');
+            const compartilharBtn = document.getElementById('compartilhar');
+            const clearHistoryBtn = document.getElementById('clearHistory');
             const totalGastosSpan = document.getElementById('totalGastos');
+            const maiorGastoSpan = document.getElementById('maiorGasto');
+            const mediaCategoriaSpan = document.getElementById('mediaCategoria');
+            const historyList = document.getElementById('historyList');
+            const notification = document.getElementById('notification');
+
+            // Histórico de cálculos
+            let history = JSON.parse(localStorage.getItem('expenseHistory') || '[]');
+
+            // Função para formatar moeda
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(value);
+            }
+
+            // Função para mostrar notificação
+            function showNotification(message, type = 'success') {
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+
+            // Função para calcular renda total
+            function calcularRendaTotal() {
+                const salarioBase = parseFloat(salarioBaseInput.value) || 0;
+                const rendaExtra = parseFloat(rendaExtraInput.value) || 0;
+                const rendaTotal = salarioBase + rendaExtra;
+                
+                rendaTotalSpan.textContent = formatCurrency(rendaTotal);
+                return rendaTotal;
+            }
 
             // Função para calcular o total
             function calcularTotal() {
                 let total = 0;
+                const values = {};
 
-                // Soma os valores dos campos
-                // Certifica-se de que os valores são números e trata campos vazios como 0
-                total += parseFloat(aluguelInput.value) || 0;
-                total += parseFloat(cartaoItauInput.value) || 0;
-                total += parseFloat(internetInput.value) || 0;
-                total += parseFloat(aguaInput.value) || 0;
-                total += parseFloat(luzInput.value) || 0;
-                total += parseFloat(cartaoCreditoInput.value) || 0;
+                // Soma todos os valores
+                Object.keys(inputs).forEach(key => {
+                    const value = parseFloat(inputs[key].value) || 0;
+                    values[key] = value;
+                    
+                    if (key === 'gas' && !ativarGasCheckbox.checked) {
+                        return; // Pula o gás se não estiver ativado
+                    }
+                    
+                    total += value;
+                });
 
-                // Adiciona o valor do gás somente se o checkbox estiver marcado e o campo não estiver desabilitado
-                if (ativarGasCheckbox.checked && !gasInput.disabled) {
-                    total += parseFloat(gasInput.value) || 0;
-                }
-
-                // Atualiza o display do total formatando para moeda brasileira
-                totalGastosSpan.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-            }
-
-            // Função para limpar os campos e resetar o total
-            function limparCampos() {
-                aluguelInput.value = '400';
-                cartaoItauInput.value = '100';
-                internetInput.value = '100';
-                aguaInput.value = '0';
-                luzInput.value = '0';
-                gasInput.value = '120';
-                ativarGasCheckbox.checked = false; // Desmarca o checkbox
-                gasInput.disabled = true; // Desabilita o campo de gás
-                cartaoCreditoInput.value = '0';
-                totalGastosSpan.textContent = 'R$ 0,00';
-            }
-
-            // Event Listener para o checkbox de Gás
-            ativarGasCheckbox.addEventListener('change', () => {
-                if (ativarGasCheckbox.checked) {
-                    gasInput.disabled = false; // Habilita o campo
+                // Calcula renda total
+                const rendaTotal = calcularRendaTotal();
+                
+                // Calcula saldo disponível
+                const saldoDisponivel = rendaTotal - total;
+                saldoDisponivelSpan.textContent = formatCurrency(saldoDisponivel);
+                
+                // Aplica cor baseada no saldo
+                if (saldoDisponivel < 0) {
+                    saldoDisponivelSpan.style.color = '#f56565';
+                } else if (saldoDisponivel < rendaTotal * 0.1) {
+                    saldoDisponivelSpan.style.color = '#ed8936';
                 } else {
-                    gasInput.disabled = true; // Desabilita o campo
-                    gasInput.value = '120'; // Opcional: reseta o valor para o padrão ao desabilitar
+                    saldoDisponivelSpan.style.color = 'white';
                 }
-                calcularTotal(); // Recalcula o total quando o status do gás muda
+
+                // Atualiza o display
+                totalGastosSpan.textContent = formatCurrency(total);
+                
+                // Calcula estatísticas
+                calcularEstatisticas(values, total, rendaTotal);
+                
+                return { total, values, rendaTotal, saldoDisponivel };
+            }
+
+            // Função para calcular estatísticas
+            function calcularEstatisticas(values, total, rendaTotal) {
+                const valoresAtivos = Object.values(values).filter(v => v > 0);
+                
+                if (valoresAtivos.length > 0) {
+                    const maior = Math.max(...valoresAtivos);
+                    const media = total / valoresAtivos.length;
+                    
+                    maiorGastoSpan.textContent = formatCurrency(maior);
+                    mediaCategoriaSpan.textContent = formatCurrency(media);
+                } else {
+                    maiorGastoSpan.textContent = '-';
+                    mediaCategoriaSpan.textContent = '-';
+                }
+
+                // Calcula percentual da renda e restante
+                if (rendaTotal > 0) {
+                    const percentual = (total / rendaTotal) * 100;
+                    const restante = rendaTotal - total;
+                    
+                    percentualRendaSpan.textContent = `${percentual.toFixed(1)}%`;
+                    restanteSpan.textContent = formatCurrency(restante);
+                    
+                    // Aplica cores baseadas no percentual
+                    if (percentual > 80) {
+                        percentualRendaSpan.style.color = '#f56565';
+                    } else if (percentual > 60) {
+                        percentualRendaSpan.style.color = '#ed8936';
+                    } else {
+                        percentualRendaSpan.style.color = '#48bb78';
+                    }
+                } else {
+                    percentualRendaSpan.textContent = '-';
+                    restanteSpan.textContent = '-';
+                }
+            }
+
+            // Função para limpar campos
+            function limparCampos() {
+                const defaultValues = {
+                    aluguel: '400',
+                    cartaoItau: '100',
+                    internet: '100',
+                    agua: '0',
+                    luz: '0',
+                    gas: '120',
+                    cartaoCredito: '0',
+                    supermercado: '0',
+                    transporte: '0',
+                    saude: '0',
+                    lazer: '0',
+                    outros: '0'
+                };
+
+                Object.keys(inputs).forEach(key => {
+                    inputs[key].value = defaultValues[key];
+                });
+
+                // Limpa campos de renda
+                salarioBaseInput.value = '0';
+                rendaExtraInput.value = '0';
+
+                ativarGasCheckbox.checked = false;
+                inputs.gas.disabled = true;
+                
+                calcularTotal();
+                showNotification('Campos limpos com sucesso!');
+            }
+
+            // Função para salvar cálculo
+            function salvarCalculo() {
+                const { total, values, rendaTotal, saldoDisponivel } = calcularTotal();
+                const data = new Date().toLocaleString('pt-BR');
+                
+                const calculo = {
+                    id: Date.now(),
+                    data,
+                    total,
+                    values,
+                    rendaTotal,
+                    saldoDisponivel
+                };
+                
+                history.unshift(calculo);
+                
+                // Mantém apenas os últimos 10 cálculos
+                if (history.length > 10) {
+                    history = history.slice(0, 10);
+                }
+                
+                localStorage.setItem('expenseHistory', JSON.stringify(history));
+                atualizarHistorico();
+                showNotification('Cálculo salvo com sucesso!');
+            }
+
+            // Função para atualizar histórico
+            function atualizarHistorico() {
+                historyList.innerHTML = '';
+                
+                history.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = `
+                        <div>
+                            <div class="history-date">${item.data}</div>
+                        </div>
+                        <div class="history-total">${formatCurrency(item.total)}</div>
+                    `;
+                    
+                    historyItem.addEventListener('click', () => {
+                        carregarCalculo(item);
+                    });
+                    
+                    historyList.appendChild(historyItem);
+                });
+            }
+
+            // Função para carregar cálculo do histórico
+            function carregarCalculo(item) {
+                Object.keys(inputs).forEach(key => {
+                    if (item.values[key] !== undefined) {
+                        inputs[key].value = item.values[key];
+                    }
+                });
+                
+                // Carrega dados de renda se existirem
+                if (item.rendaTotal !== undefined) {
+                    // Para compatibilidade com histórico antigo
+                    if (item.salarioBase !== undefined) {
+                        salarioBaseInput.value = item.salarioBase;
+                        rendaExtraInput.value = item.rendaExtra || 0;
+                    } else {
+                        // Estimativa baseada na renda total
+                        salarioBaseInput.value = item.rendaTotal;
+                        rendaExtraInput.value = 0;
+                    }
+                }
+                
+                // Ativa o gás se tinha valor
+                if (item.values.gas > 0) {
+                    ativarGasCheckbox.checked = true;
+                    inputs.gas.disabled = false;
+                } else {
+                    ativarGasCheckbox.checked = false;
+                    inputs.gas.disabled = true;
+                }
+                
+                calcularTotal();
+                showNotification('Cálculo carregado do histórico!');
+            }
+
+            // Função para exportar PDF
+            function exportarPDF() {
+                const { total, values, rendaTotal, saldoDisponivel } = calcularTotal();
+                const data = new Date().toLocaleString('pt-BR');
+                
+                let content = `
+                    <h1>Relatório Financeiro Mensal</h1>
+                    <p><strong>Data:</strong> ${data}</p>
+                    
+                    <h2>Renda:</h2>
+                    <ul>
+                        <li>Salário Base: ${formatCurrency(parseFloat(salarioBaseInput.value) || 0)}</li>
+                        <li>Renda Extra: ${formatCurrency(parseFloat(rendaExtraInput.value) || 0)}</li>
+                        <li><strong>Renda Total: ${formatCurrency(rendaTotal)}</strong></li>
+                    </ul>
+                    
+                    <h2>Despesas:</h2>
+                    <ul>
+                `;
+                
+                Object.keys(values).forEach(key => {
+                    if (values[key] > 0) {
+                        const label = key.charAt(0).toUpperCase() + key.slice(1);
+                        content += `<li>${label}: ${formatCurrency(values[key])}</li>`;
+                    }
+                });
+                
+                content += `
+                    </ul>
+                    <h2>Resumo:</h2>
+                    <ul>
+                        <li><strong>Total de Gastos: ${formatCurrency(total)}</strong></li>
+                        <li><strong>Saldo Disponível: ${formatCurrency(saldoDisponivel)}</strong></li>
+                        <li>Percentual da Renda: ${((total / rendaTotal) * 100).toFixed(1)}%</li>
+                    </ul>
+                `;
+                
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Relatório Financeiro</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; padding: 20px; }
+                                h1 { color: #667eea; }
+                                h2 { color: #4a5568; }
+                                ul { list-style-type: none; padding: 0; }
+                                li { padding: 5px 0; border-bottom: 1px solid #eee; }
+                                .negative { color: #f56565; }
+                                .positive { color: #48bb78; }
+                            </style>
+                        </head>
+                        <body>${content}</body>
+                    </html>
+                `);
+                printWindow.document.close();
+                printWindow.print();
+                
+                showNotification('Relatório gerado com sucesso!');
+            }
+
+            // Função para compartilhar
+            function compartilhar() {
+                const { total, rendaTotal, saldoDisponivel } = calcularTotal();
+                const texto = `💰 Relatório Financeiro:
+Renda Total: ${formatCurrency(rendaTotal)}
+Gastos: ${formatCurrency(total)}
+Saldo: ${formatCurrency(saldoDisponivel)}
+Percentual: ${((total / rendaTotal) * 100).toFixed(1)}% da renda`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Relatório Financeiro',
+                        text: texto,
+                        url: window.location.href
+                    });
+                } else {
+                    // Fallback para copiar para área de transferência
+                    navigator.clipboard.writeText(texto).then(() => {
+                        showNotification('Relatório copiado para área de transferência!');
+                    });
+                }
+            }
+
+            // Função para limpar histórico
+            function limparHistorico() {
+                if (confirm('Tem certeza que deseja limpar todo o histórico?')) {
+                    history = [];
+                    localStorage.removeItem('expenseHistory');
+                    atualizarHistorico();
+                    showNotification('Histórico limpo com sucesso!');
+                }
+            }
+
+            // Event Listeners
+            ativarGasCheckbox.addEventListener('change', () => {
+                inputs.gas.disabled = !ativarGasCheckbox.checked;
+                if (!ativarGasCheckbox.checked) {
+                    inputs.gas.value = '120';
+                }
+                calcularTotal();
             });
 
-            // Event Listeners para os botões
-            calcularBtn.addEventListener('click', calcularTotal);
+            calcularBtn.addEventListener('click', () => {
+                calcularTotal();
+                showNotification('Cálculo realizado com sucesso!');
+            });
+
             limparBtn.addEventListener('click', limparCampos);
+            salvarBtn.addEventListener('click', salvarCalculo);
+            exportarBtn.addEventListener('click', exportarPDF);
+            compartilharBtn.addEventListener('click', compartilhar);
+            clearHistoryBtn.addEventListener('click', limparHistorico);
 
-            // Event Listeners para recalcular o total ao digitar nos campos
-            // Usamos 'input' para capturar mudanças em tempo real
-            aluguelInput.addEventListener('input', calcularTotal);
-            cartaoItauInput.addEventListener('input', calcularTotal);
-            internetInput.addEventListener('input', calcularTotal);
-            aguaInput.addEventListener('input', calcularTotal);
-            luzInput.addEventListener('input', calcularTotal);
-            gasInput.addEventListener('input', calcularTotal);
-            cartaoCreditoInput.addEventListener('input', calcularTotal);
+            // Event Listeners para recalcular em tempo real
+            Object.values(inputs).forEach(input => {
+                input.addEventListener('input', calcularTotal);
+            });
 
-            // Inicializa o cálculo ao carregar a página para mostrar os valores padrão
+            // Event Listeners para campos de renda
+            salarioBaseInput.addEventListener('input', calcularTotal);
+            rendaExtraInput.addEventListener('input', calcularTotal);
+
+            // Inicialização
             calcularTotal();
+            atualizarHistorico();
         });
     </script>
 </body>
